@@ -40,7 +40,7 @@ class DecisionTree:
         return tree
 
     def _best_attribute(self, dataOfParent, attributes, target_col):
-        best_gain = -float("inf")
+        best_gain = -np.inf
         best_attr = None
 
         for attribute in attributes:
@@ -101,27 +101,26 @@ def entropy(attributes):
 
 
 
-def preprocess_data(data, target_data):
-
-    X_train, X_test, y_train, y_test = train_test_split(data, target_data, test_size=0.4)
+def preprocess_data(data, target_data, state):
+    X_train, X_test, y_train, y_test = train_test_split(data, target_data, test_size=0.4, random_state=state)
     y_train = y_train.squeeze()
     y_test = y_test.squeeze()
     return X_train, X_test, y_train, y_test
 
 def main():
-    breast_cancer = fetch_ucirepo(id=14)
-    mushroom = fetch_ucirepo(id=73)
+    dataframe = fetch_ucirepo(id=19)
     # data (as pandas dataframes)
-    X = mushroom.data.features
-    y = mushroom.data.targets
-    X_train, X_test, y_train, y_test = preprocess_data(X, y)
-    tree = DecisionTree()
-    tree.create_tree(X_train, y_train)
-    predictions = tree.predict(X_test)
-    # Ocena modelu
-    conMatrix = confusion_matrix(y_test, predictions)
-    print(f"Macierz pomyłek:\n{conMatrix}")
-    print(f"Dokładność: {accuracy_score(y_test, predictions)}")
+    X = dataframe.data.features
+    y = dataframe.data.targets
+    results = np.array([])
+    for i in range(25):
+        X_train, X_test, y_train, y_test = preprocess_data(X, y, i)
+        tree = DecisionTree()
+        tree.create_tree(X_train, y_train)
+        predictions = tree.predict(X_test)
+        conMatrix = confusion_matrix(y_test, predictions)
+        accuracy = accuracy_score(y_test, predictions)
+        results = np.append(results, accuracy)
 
 if __name__ == "__main__":
     main()
