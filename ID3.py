@@ -20,11 +20,10 @@ class DecisionTree:
         self.tree = self._build_tree(data, attributes, 'Class')
 
     def _build_tree(self, data, attributes, target_col):
-        # Jeżeli wszystkie dane mają tę samą klasę, kończymy
         if len(set(data[target_col])) == 1:
             return data[target_col].iloc[0]
 
-        # Jeżeli brak atrybutów do podziału, zwracamy najczęściej występującą klasę
+        # Jeżeli brak atrybutów do podziału, zwracam najczęściej występującą klasę
         if len(attributes) == 0:
             return self._most_common_class
 
@@ -80,7 +79,6 @@ class DecisionTree:
         return most_common_class
 
 
-
 def information_gain(data, attribute, target_col):
     total_entropy = entropy(data[target_col])  # Liczy entropie przed podziałem (entropia rodzica)
     values = data[attribute].unique()
@@ -93,12 +91,11 @@ def information_gain(data, attribute, target_col):
 
     return total_entropy - children_entropy
 
+
 def entropy(attributes):
     classes_counter = Counter(atr for atr in attributes)
     proportions_of_classes = (i / len(attributes) for i in classes_counter.values())
     return -sum(p * log2(p) for p in proportions_of_classes)
-
-
 
 
 def preprocess_data(data, target_data, state):
@@ -106,6 +103,7 @@ def preprocess_data(data, target_data, state):
     y_train = y_train.squeeze()
     y_test = y_test.squeeze()
     return X_train, X_test, y_train, y_test
+
 
 def main():
     dataframe = fetch_ucirepo(id=19)
@@ -121,6 +119,5 @@ def main():
         conMatrix = confusion_matrix(y_test, predictions)
         accuracy = accuracy_score(y_test, predictions)
         results = np.append(results, accuracy)
-
 if __name__ == "__main__":
     main()
