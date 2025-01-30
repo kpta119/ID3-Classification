@@ -6,6 +6,9 @@ from math import log2
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, accuracy_score
 
+import pandas as pd
+import numpy as np
+
 
 class DecisionTree:
     def __init__(self):
@@ -26,7 +29,7 @@ class DecisionTree:
 
         # Jeżeli brak atrybutów do podziału, zwracamy najczęściej występującą klasę
         if len(attributes) == 0:
-            return self._most_common_class
+            return data[target_col].mode()[0]
 
         best_attr = self._best_attribute(data, attributes, target_col)
         tree = {best_attr: {}}
@@ -113,7 +116,7 @@ def main():
     X = dataframe.data.features
     y = dataframe.data.targets
     results = np.array([])
-    for i in range(25):
+    for i in range(10):
         X_train, X_test, y_train, y_test = preprocess_data(X, y, i)
         tree = DecisionTree()
         tree.create_tree(X_train, y_train)
@@ -121,6 +124,8 @@ def main():
         conMatrix = confusion_matrix(y_test, predictions)
         accuracy = accuracy_score(y_test, predictions)
         results = np.append(results, accuracy)
+        print(np.mean(results))
+        print(conMatrix)
 
 if __name__ == "__main__":
     main()
