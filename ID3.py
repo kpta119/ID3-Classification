@@ -122,8 +122,9 @@ def main():
         conMatrix = confusion_matrix(y_test, predictions)
         accuracy = accuracy_score(y_test, predictions)
         results = np.append(results, accuracy)
-        print(np.mean(results))
-        print(conMatrix)
+
+    print(np.mean(results))
+    print(conMatrix)
 
 if __name__ == "__main__":
     main()
